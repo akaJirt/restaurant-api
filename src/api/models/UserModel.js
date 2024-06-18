@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const bcrypt = require("bcryptjs");
 
 const userSchema = new Schema({
   fullName: {
@@ -7,25 +8,37 @@ const userSchema = new Schema({
     required: true,
     validate: {
       validator: function (v) {
-        return /^[a-zA-Z\s]*$/.test(v);
+        return /^[\p{L}\s]+$/u.test(v);
       },
-      message: (props) => `${props.value} is not a valid name!`,
+      message: (props) => `${props.value} is not a valid last name!`,
     },
   },
-  phoneNumber: {
+  email: {
     type: String,
     required: true,
     unique: true,
     validate: {
       validator: function (v) {
-        return /^\+?[0-9]{7,15}$/.test(v);
+        return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v);
       },
-      message: (props) => `${props.value} is not a valid phone number!`,
+      message: (props) => `${props.value} is not a valid email address!`,
+    },
+  },
+  password: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (v) {
+        return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(v);
+      },
+      message: (props) =>
+        `Password must contain at least 8 characters, including uppercase, lowercase letters and numbers!`,
     },
   },
   img_avatar_url: {
     type: String,
-    default: null,
+    default:
+      "https://res.cloudinary.com/df44phxv9/image/upload/v1718237515/PRO2052/frx8qlue8l1xjfiqty6k.png",
   },
   role: {
     type: String,
@@ -64,5 +77,19 @@ const userSchema = new Schema({
     },
   },
 });
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
+});
+
+userSchema.methods.correctPassword = async function (
+  candidatePassword,
+  userPassword
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 
 module.exports = mongoose.model("User", userSchema);
