@@ -4,18 +4,6 @@ const User = require("../models/UserModel");
 const { sendMail } = require("../services/sendMailServices");
 const { signToken } = require("../services/jwtServices");
 
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
-  delete users._doc.password;
-  res.status(200).json({
-    status: "success",
-    results: users.length,
-    data: {
-      users,
-    },
-  });
-});
-
 exports.registerUser = catchAsync(async (req, res, next) => {
   const requiredFields = ["fullName", "email", "password"];
 
@@ -77,6 +65,17 @@ exports.login = catchAsync(async (req, res, next) => {
     message: "Login successful!",
     data: {
       token,
+    },
+  });
+});
+exports.getAllUsers = catchAsync(async (req, res, next) => {
+  const users = await User.find();
+  delete users._doc.password;
+  res.status(200).json({
+    status: "success",
+    results: users.length,
+    data: {
+      users,
     },
   });
 });

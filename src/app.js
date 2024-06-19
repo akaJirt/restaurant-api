@@ -16,6 +16,9 @@ const globalErrorHandler = require("./api/controllers/errorController");
 const testRouter = require("./api/routes/testRoutes");
 const userRouter = require("./api/routes/userRoutes");
 const categoryRouter = require("./api/routes/categoryRoutes");
+const menuItemRouter = require("./api/routes/menuItemRoutes");
+const tableRouter = require("./api/routes/tableRoutes");
+const orderRouter = require("./api/routes/orderRoutes");
 
 //: ******* START EXPRESS APP *******
 const app = express();
@@ -63,6 +66,9 @@ app.use(compression());
 app.use("/api/v1/test", testRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/categories", categoryRouter);
+app.use("/api/v1/menuItems", menuItemRouter);
+app.use("/api/v1/tables", tableRouter);
+app.use("/api/v1/orders", orderRouter);
 //: ******* ERROR HANDLING *******
 // 1) Handle unhandled routes
 app.all("*", (req, res, next) => {

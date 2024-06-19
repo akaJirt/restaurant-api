@@ -2,6 +2,7 @@ const AppError = require("../utils/AppError");
 const catchAsync = require("../utils/catchAsync");
 const jwt = require("jsonwebtoken");
 const User = require("../models/UserModel");
+const Table = require("../models/TableModel");
 
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
@@ -44,3 +45,17 @@ exports.restrictTo = (...roles) => {
     next();
   };
 };
+
+exports.checkTableAvailability = catchAsync(async (req, res, next) => {
+  if (req.user.role === "admin" || req.user.role === "staff") return next();
+  const table = await Table.findById(req.params.id);
+  if (!table) {
+    return next(new AppError("Table not found", 404));
+  }
+  if (!table.is_available) {
+    return next(
+      new AppError("You can't access this table, please call the staff", 403)
+    );
+  }
+  next();
+});
