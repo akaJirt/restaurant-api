@@ -65,13 +65,8 @@ app.use(compression());
 //: >>>>>>> END GLOBAL MIDDLEWARE >>>>>>>
 
 //: ******* ROUTES *******
-app.get("/", (req, res) => {
-  res.status(200).json({
-    status: "success",
-    message: "Welcome to the Restaurant API!",
-  });
-});
-app.use("/api/v1/test", testRouter);
+
+app.use("/", testRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/menuItems", menuItemRouter);
