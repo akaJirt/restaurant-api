@@ -51,8 +51,9 @@ exports.updateTableAvailability = catchAsync(async (req, res, next) => {
 exports.createTable = catchAsync(async (req, res, next) => {
   const table = await Table.create({ ...req.body, qr_code: undefined });
   table.qr_code = await QRCode.toDataURL(
-    `${process.env.BASE_URL}/api/v1/tables/${table._id}`
+    `https://restaurant-api-dev.onrender.com/api/v1/tables/${table._id}`
   );
+  console.log(table.qr_code);
   await table.save();
   res.status(201).json({
     status: "success",
