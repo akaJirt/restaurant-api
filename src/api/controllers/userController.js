@@ -4,6 +4,8 @@ const User = require("../models/UserModel");
 const { sendMail } = require("../services/sendMailServices");
 const { signToken } = require("../services/jwtServices");
 
+// @desc Register a user
+// @route POST /api/v1/users/register
 exports.registerUser = catchAsync(async (req, res, next) => {
   const requiredFields = ["fullName", "email", "password"];
 
@@ -25,6 +27,8 @@ exports.registerUser = catchAsync(async (req, res, next) => {
   });
 });
 
+// @desc Verify user's email
+// @route POST /api/v1/users/verify
 exports.verifyEmail = catchAsync(async (req, res, next) => {
   const { email, verificationCode } = req.body;
   const user = await User.findOne({ email });
@@ -48,6 +52,8 @@ exports.verifyEmail = catchAsync(async (req, res, next) => {
   });
 });
 
+// @desc Login a user
+// @route POST /api/v1/users/login
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
@@ -68,6 +74,9 @@ exports.login = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+// @desc Get all users
+// @route GET /api/v1/users
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
   delete users._doc.password;
@@ -80,6 +89,8 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
   });
 });
 
+// @desc Get a user
+// @route GET /api/v1/users/:id
 exports.getUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   if (!user) {
@@ -95,6 +106,8 @@ exports.getUser = catchAsync(async (req, res, next) => {
   });
 });
 
+// @desc Update user details
+// @route PATCH /api/v1/users
 exports.updateUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   if (!user) {
@@ -119,6 +132,8 @@ exports.updateUser = catchAsync(async (req, res, next) => {
   });
 });
 
+// @desc Delete a user
+// @route DELETE /api/v1/users
 exports.deleteUser = catchAsync(async (req, res, next) => {
   const user = await User.findByIdAndDelete(req.user.id);
   if (!user) {

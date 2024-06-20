@@ -20,6 +20,9 @@ const menuItemRouter = require("./api/routes/menuItemRoutes");
 const tableRouter = require("./api/routes/tableRoutes");
 const orderRouter = require("./api/routes/orderRoutes");
 
+//: ******* Swagger ********
+const { swaggerUi, swaggerDocs } = require("./swagger/swaggerDocs");
+
 //: ******* START EXPRESS APP *******
 const app = express();
 
@@ -60,9 +63,10 @@ app.use(xss());
 // 9) Compression
 app.use(compression());
 
-
-
 //: >>>>>>> END GLOBAL MIDDLEWARE >>>>>>>
+
+//: ******* SWAGGER ROUTES *******
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 //: ******* ROUTES *******
 
