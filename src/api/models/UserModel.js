@@ -2,6 +2,19 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 
+// Tạo swagger cho model User
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *   User:
+ *   type: object
+ *  required:
+ *  - fullName
+ * - email
+ * - password
+ */
+
 const userSchema = new Schema(
   {
     fullName: {

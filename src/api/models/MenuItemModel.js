@@ -1,18 +1,24 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
+const diacritics = require("diacritics");
 const menuItemSchema = new Schema(
   {
     name: {
       type: String,
       required: true,
       unique: true,
+      trim: true,
       validate: {
         validator: function (v) {
           return /^[\p{L}\s]+$/u.test(v);
         },
         message: (props) => `${props.value} is not a valid last name!`,
       },
+    },
+    normalized_name: {
+      type: String,
+      trim: true,
+      lowercase: true,
     },
     description: {
       type: String,
@@ -53,5 +59,14 @@ const menuItemSchema = new Schema(
   },
   { timestamps: true }
 );
+
+menuItemSchema.pre("findOneAndUpdate", function (next) {
+  const update = this.getUpdate();
+  if (update.name) {
+    update.normalized_name = diacritics.remove(update.name).toLowerCase();
+    this.setUpdate(update);
+  }
+  next();
+});
 
 module.exports = mongoose.model("MenuItem", menuItemSchema);

@@ -2,6 +2,8 @@ const AppError = require("../utils/AppError");
 const catchAsync = require("../utils/catchAsync");
 const Category = require("../models/CategoriesModel");
 
+// @desc Get all categories
+// @route GET /api/v1/categories
 exports.getAllCategories = catchAsync(async (req, res, next) => {
   const categories = await Category.find();
   res.status(200).json({
@@ -14,6 +16,8 @@ exports.getAllCategories = catchAsync(async (req, res, next) => {
   });
 });
 
+// @desc Create a category
+// @route POST /api/v1/categories
 exports.createCategory = catchAsync(async (req, res, next) => {
   const category = await Category.create(req.body);
   res.status(201).json({
@@ -25,6 +29,8 @@ exports.createCategory = catchAsync(async (req, res, next) => {
   });
 });
 
+// @desc Get a category
+// @route GET /api/v1/categories/:id
 exports.getCategory = catchAsync(async (req, res, next) => {
   const category = await Category.findById(req.params.id);
   if (!category) {
@@ -39,6 +45,8 @@ exports.getCategory = catchAsync(async (req, res, next) => {
   });
 });
 
+// @desc Update a category
+// @route PATCH /api/v1/categories/:id
 exports.updateCategory = catchAsync(async (req, res, next) => {
   const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
@@ -56,6 +64,8 @@ exports.updateCategory = catchAsync(async (req, res, next) => {
   });
 });
 
+// @desc Delete a category
+// @route DELETE /api/v1/categories/:id
 exports.deleteCategory = catchAsync(async (req, res, next) => {
   const category = await Category.findById(req.params.id);
   if (!category) {
